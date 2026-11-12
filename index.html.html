@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Retire in India: Buy or Rent? – Family Home Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#F3F5F1; --surface:#FFFFFF; --surface2:#E9EDE6; --ink:#1D2547; --ink2:#4A5272; --muted:#7A8098;
+  --line:#D5DBD0; --indigo:#2E3F7F; --neem:#2F7556; --neem2:#7FB89A; --haldi:#D49A12; --rent:#3E63B8; --warn:#B4492F;
+  --track:#D9DED5; color-scheme:light;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121731; --surface:#1B2142; --surface2:#242B52; --ink:#EEF0F7; --ink2:#C3C8DD; --muted:#8E95B3;
+    --line:#2F3762; --indigo:#9DB0F2; --neem:#5DBA8C; --neem2:#3E7F60; --haldi:#F0BA3C; --rent:#8EA9F0; --warn:#F08A6E;
+    --track:#323A66; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121731; --surface:#1B2142; --surface2:#242B52; --ink:#EEF0F7; --ink2:#C3C8DD; --muted:#8E95B3;
+  --line:#2F3762; --indigo:#9DB0F2; --neem:#5DBA8C; --neem2:#3E7F60; --haldi:#F0BA3C; --rent:#8EA9F0; --warn:#F08A6E;
+  --track:#323A66; color-scheme:dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.15}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--haldi);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1360px;margin:0 auto;padding:20px 20px 90px}
+header.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between;margin-bottom:18px}
+header.top h1{font-size:clamp(1.7rem,3.2vw,2.6rem);font-weight:800;letter-spacing:-0.02em}
+header.top p{margin:4px 0 0;color:var(--ink2);max-width:62ch}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.cur{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 8px}
+.cur select{background:transparent;border:0;font-weight:700}
+.cur input{width:84px;background:var(--surface2);border:1px solid var(--line);border-radius:6px;padding:3px 6px;text-align:right}
+.cur small{color:var(--muted);font-size:12px}
+.layout{display:grid;grid-template-columns:380px 1fr;gap:22px;align-items:start}
+@media (max-width:980px){.layout{grid-template-columns:1fr}}
+aside.controls{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:6px 16px 16px}
+.sheet-head{display:none;position:sticky;top:0;background:var(--surface);z-index:2;align-items:center;justify-content:space-between;gap:10px;padding:12px 0 10px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.sheet-head::before{content:"";position:absolute;top:5px;left:50%;width:44px;height:4px;margin-left:-22px;border-radius:2px;background:var(--line)}
+.sheet-head .t{font-family:var(--display);font-weight:700;font-size:1.05rem}
+.sheet-head .note{font-size:13px;color:var(--ink2)}
+.backdrop{display:none;position:fixed;inset:0;background:rgba(10,14,30,.45);z-index:35}
+@media (max-width:980px){
+  aside.controls{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:40;max-height:80vh;max-height:80dvh;border-radius:20px 20px 0 0;border-bottom:0;transform:translateY(105%);transition:transform .3s ease;padding:0 16px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 30px rgba(0,0,0,.25);overscroll-behavior:contain}
+  aside.controls.open{transform:none}
+  .sheet-head{display:flex}
+  .backdrop.show{display:block}
+  body.sheet-open{overflow:hidden}
+}
+@media (max-width:980px) and (prefers-reduced-motion:reduce){aside.controls{transition:none}}
+details.grp{border-bottom:1px solid var(--line);padding:6px 0}
+details.grp:last-child{border-bottom:0}
+details.grp>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-family:var(--display);font-weight:600;font-size:1.05rem}
+details.grp>summary::-webkit-details-marker{display:none}
+details.grp>summary::after{content:"+";color:var(--muted);font-size:1.3rem;font-weight:400}
+details.grp[open]>summary::after{content:"–"}
+.ctl{margin:10px 0 14px}
+.ctl .lab{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:var(--ink2)}
+.ctl .lab b{color:var(--ink);font-weight:700;white-space:nowrap}
+.ctl .hint{font-size:12px;color:var(--muted);margin-top:2px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;margin:2px 0 0}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--indigo) 0 var(--p,50%),var(--track) var(--p,50%) 100%)}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--track)}
+input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--indigo)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--surface);border:3px solid var(--indigo);margin-top:-7px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--surface);border:3px solid var(--indigo)}
+.city-ctl{background:var(--surface2);border-radius:12px;padding:10px 12px;margin:8px 0 12px}
+.city-name{font-family:var(--display);font-weight:800;font-size:1.6rem;letter-spacing:-0.01em}
+.city-sub{font-size:13px;color:var(--ink2)}
+.ticks{display:flex;justify-content:space-between;margin-top:2px}
+.ticks button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:var(--track);cursor:pointer}
+.ticks button.on{background:var(--haldi)}
+.seg{display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:3px;margin-top:4px}
+.seg button{flex:1;border:0;background:transparent;border-radius:8px;padding:6px 4px;font-size:14px;cursor:pointer;color:var(--ink2)}
+.seg button[aria-pressed=true]{background:var(--surface);color:var(--ink);font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.seg.st{flex-wrap:wrap}
+.seg.st button{flex:1 1 45%}
+.ban{background:color-mix(in srgb,var(--warn) 14%,transparent);border:1px solid var(--warn);border-radius:10px;padding:8px 10px;margin-top:10px;font-size:14px}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;margin:8px 0;color:var(--ink2)}
+.fam{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}
+.stepper{background:var(--surface2);border-radius:12px;padding:8px;text-align:center}
+.stepper .n{font-family:var(--display);font-weight:800;font-size:1.6rem}
+.stepper .t{font-size:12px;color:var(--ink2)}
+.stepper .bt{display:flex;justify-content:center;gap:6px;margin-top:4px}
+.stepper button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:700}
+.note{font-size:12px;color:var(--muted)}
+.reset{border:1px solid var(--line);background:transparent;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:13px;color:var(--ink2)}
+
+main{min-width:0}
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;display:grid;grid-template-columns:1.1fr 1fr;gap:18px;align-items:center}
+@media (max-width:760px){.hero{grid-template-columns:1fr}}
+.verdict{font-family:var(--display);font-size:clamp(1.4rem,2.6vw,2.1rem);font-weight:800;letter-spacing:-0.015em;line-height:1.12}
+.verdict-sub{color:var(--ink2);margin-top:8px}
+.beam svg{width:100%;height:auto;display:block}
+.beam-g{transition:transform .7s cubic-bezier(.3,1.4,.5,1);transform-origin:200px 70px}
+@media (prefers-reduced-motion:reduce){.beam-g{transition:none}}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.kpi .k{font-size:13px;color:var(--ink2)}
+.kpi .v{font-family:var(--display);font-weight:700;font-size:1.3rem}
+.kpi .s{font-size:12px;color:var(--muted)}
+.kpi.buy .v{color:var(--neem)} .kpi.rent .v{color:var(--rent)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-top:14px}
+.panel h2{font-size:1.3rem;margin-bottom:6px}
+.panel h3{font-size:1.05rem;margin:12px 0 6px}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.charts{grid-template-columns:1fr}}
+.chartbox{position:relative;height:280px}
+.chartcap{font-size:13px;color:var(--ink2);margin:2px 0 6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+ul.pc{margin:0;padding-left:18px}
+ul.pc li{margin:3px 0}
+.pros li::marker{color:var(--neem)} .cons li::marker{color:var(--warn)}
+.areas{display:grid;gap:8px}
+.area{border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.area b{font-weight:700}
+.tag{display:inline-block;font-size:12px;padding:1px 7px;border-radius:999px;background:var(--surface2);color:var(--ink2);margin:2px 4px 0 0}
+.tag.hit{background:color-mix(in srgb,var(--neem) 22%,transparent);color:var(--ink)}
+.tblwrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-weight:700;color:var(--ink2);font-size:13px;white-space:nowrap}
+td.num,th.num{text-align:right;white-space:nowrap}
+tr.sel td{background:color-mix(in srgb,var(--haldi) 16%,transparent)}
+tr.click{cursor:pointer}
+.bar{height:8px;border-radius:4px;background:var(--neem)}
+.rec ol{margin:6px 0 0;padding-left:20px}
+.rec li{margin:6px 0}
+.ai{border:1px dashed var(--line);border-radius:12px;padding:12px;margin-top:10px}
+.ai button,.btn{border:0;background:var(--indigo);color:var(--surface);padding:8px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+:root[data-theme="dark"] .ai button,:root[data-theme="dark"] .btn{color:#121731}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ai button,:root:not([data-theme="light"]) .btn{color:#121731}}
+.ai-out{white-space:pre-wrap;margin-top:10px;font-size:15px}
+.breakdown{display:grid;gap:6px}
+.brow{display:grid;grid-template-columns:150px 1fr 110px;gap:8px;align-items:center;font-size:14px}
+.brow .bt{height:10px;background:var(--surface2);border-radius:5px;overflow:hidden}
+.brow .bf{height:100%;background:var(--indigo)}
+.brow .bv{text-align:right}
+.sticky-v{position:fixed;left:0;right:0;bottom:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--line);display:none;align-items:center;gap:12px;z-index:30;box-shadow:0 -4px 16px rgba(0,0,0,.12)}
+@media (max-width:980px){.sticky-v{display:flex}}
+.sticky-v .txt{flex:1;min-width:0;font-weight:700;font-size:14px;line-height:1.25}
+.sticky-v .btn{flex:none;min-height:44px;padding:10px 18px;font-size:15px}
+footer{color:var(--muted);font-size:13px;margin-top:20px;max-width:90ch}
+@media (max-width:980px){.wrap{padding-bottom:110px}}
+@media (max-width:600px){
+  .wrap{padding:12px 12px 110px}
+  header.top{margin-bottom:12px}
+  header.top h1{font-size:1.65rem}
+  header.top p{font-size:15px}
+  .toolbar{width:100%}
+  .cur{flex:1;justify-content:space-between;white-space:nowrap}
+  .cur input{width:76px}
+  .cur small{display:none}
+  .hero{padding:14px;gap:6px}
+  .verdict{font-size:1.45rem}
+  .beam{max-width:330px;width:100%;margin:0 auto}
+  #exitSeg{max-width:none!important}
+  .kpis{grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+  .kpi{padding:9px 10px}
+  .kpi .v{font-size:1.12rem}
+  .panel{padding:14px 12px;border-radius:14px;margin-top:10px}
+  .panel h2{font-size:1.18rem}
+  .chartbox{height:230px}
+  .brow{grid-template-columns:112px 1fr 74px;font-size:13px;gap:6px}
+  .hide-sm{display:none}
+  table{font-size:13.5px}
+  th,td{padding:6px 5px}
+  table.stack tr:first-child{display:none}
+  table.stack tr{display:block;border:1px solid var(--line);border-radius:10px;margin:8px 0;padding:6px 10px}
+  table.stack td{display:flex;justify-content:space-between;gap:12px;border:0;padding:3px 0;text-align:right;white-space:normal}
+  table.stack td::before{content:attr(data-label);color:var(--muted);text-align:left;flex:none}
+  table.stack td:first-child{display:block;text-align:left;font-size:15px;padding-bottom:4px}
+  table.stack td:first-child::before{content:none}
+}
+@media (pointer:coarse){
+  input[type=range]{height:40px}
+  input[type=range]::-webkit-slider-thumb{width:28px;height:28px;margin-top:-11px}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px}
+  .seg button{min-height:44px;font-size:15px}
+  .stepper button{width:40px;height:40px;font-size:1.1rem;flex:none}
+  .stepper{padding:8px 4px}
+  .stepper .bt{gap:4px}
+  .ticks{padding:4px 0}
+  .ticks button{width:15px;height:15px}
+  .chk{min-height:40px;font-size:15px}
+  .chk input{width:20px;height:20px}
+  .reset{min-height:40px}
+  details.grp>summary{padding:12px 0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div>
+    <h1>Retire in India: buy or rent?</h1>
+    <p>Move the sliders to see how a family home in your chosen city compares with renting – in wealth, monthly cost and fit for your family.</p>
+  </div>
+  <div class="toolbar">
+    <label class="cur" title="Display currency">
+      <select id="currency" aria-label="Display currency"></select>
+      <span>1 = ₹</span><input id="fxrate" type="number" step="0.01" aria-label="Rupees per unit of currency">
+      <small id="fxnote"></small>
+    </label>
+    <button class="reset" id="resetBtn" type="button">Reset to city defaults</button>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="controls" id="sheet" aria-label="Inputs">
+  <div class="sheet-head"><div><div class="t">Adjust your plan</div><div class="note" id="sheetV"></div></div><button type="button" class="btn" id="closeSheet">Done</button></div>
+  <details class="grp" open>
+    <summary>City and family</summary>
+    <div class="city-ctl">
+      <div class="city-name" id="cityName">Pune</div>
+      <div class="city-sub" id="citySub"></div>
+      <input type="range" id="city" min="0" max="14" step="1" value="0" aria-label="City">
+      <div class="ticks" id="cityTicks"></div>
+    </div>
+    <div class="fam">
+      <div class="stepper"><div class="n" id="adultsN">2</div><div class="t">Adults</div><div class="bt"><button type="button" data-step="adults:-1" aria-label="Fewer adults">−</button><button type="button" data-step="adults:1" aria-label="More adults">+</button></div></div>
+      <div class="stepper"><div class="n" id="childrenN">1</div><div class="t">Children</div><div class="bt"><button type="button" data-step="children:-1" aria-label="Fewer children">−</button><button type="button" data-step="children:1" aria-label="More children">+</button></div></div>
+      <div class="stepper"><div class="n" id="seniorsN">2</div><div class="t">Seniors 65+</div><div class="bt"><button type="button" data-step="seniors:-1" aria-label="Fewer seniors">−</button><button type="button" data-step="seniors:1" aria-label="More seniors">+</button></div></div>
+    </div>
+    <label class="chk"><input type="checkbox" id="travel" checked> Still working or travelling abroad often</label>
+    <div class="ctl"><div class="lab"><span>Your status when buying</span></div>
+      <div class="seg st" id="residencySeg"><button type="button" data-v="res" aria-pressed="false">Resident Indian</button><button type="button" data-v="nri" aria-pressed="false">NRI</button><button type="button" data-v="oci" aria-pressed="true">OCI cardholder</button><button type="button" data-v="foreign" aria-pressed="false">Foreign, no OCI</button></div>
+      <div class="hint" id="resHint"></div></div>
+    <div class="ctl"><div class="lab"><span>School fees per child (per year)</span><b id="feesV"></b></div><input type="range" id="fees" min="0" max="1500000" step="50000"><div class="hint">Set 0 if children are grown up or schooled elsewhere.</div></div>
+  </details>
+
+  <details class="grp" open>
+    <summary>The home</summary>
+    <div class="ctl"><div class="lab"><span>Type</span></div><div class="seg" id="typeSeg"><button type="button" data-v="apt" aria-pressed="true">Apartment</button><button type="button" data-v="villa" aria-pressed="false">Villa</button></div></div>
+    <div class="ctl"><div class="lab"><span>Status</span></div><div class="seg" id="statusSeg"><button type="button" data-v="ready" aria-pressed="true">Ready (OC)</button><button type="button" data-v="uc" aria-pressed="false">Under construction</button></div><div class="hint">Under construction adds 5% GST and delivery risk.</div></div>
+    <label class="chk"><input type="checkbox" id="autosize" checked> Size the home from my family</label>
+    <div class="ctl"><div class="lab"><span>Home size</span><b id="sqftV"></b></div><input type="range" id="sqft" min="600" max="6000" step="50"><div class="hint" id="bhkHint"></div></div>
+    <div class="ctl"><div class="lab"><span>Price mode</span></div><div class="seg" id="priceSeg"><button type="button" data-v="rate" aria-pressed="true">Size × rate</button><button type="button" data-v="direct" aria-pressed="false">Set price</button></div></div>
+    <div class="ctl" id="psfCtl"><div class="lab"><span>Price per sq ft</span><b id="psfV"></b></div><input type="range" id="psf" min="3000" max="40000" step="250"></div>
+    <div class="ctl" id="priceCtl" hidden><div class="lab"><span>Property price</span><b id="priceV"></b></div><input type="range" id="price" min="5000000" max="200000000" step="500000"></div>
+    <div class="ctl"><div class="lab"><span>Interiors & fit-out per sq ft</span><b id="intV"></b></div><input type="range" id="interior" min="0" max="5000" step="100"></div>
+    <label class="chk"><input type="checkbox" id="woman"> Register in a woman's name (stamp duty concession where offered)</label>
+  </details>
+
+  <details class="grp" open>
+    <summary>Loan and returns</summary>
+    <div class="ctl"><div class="lab"><span>Loan share of price</span><b id="ltvV"></b></div><input type="range" id="ltv" min="0" max="0.8" step="0.05"><div class="hint">0% = pay in full. Banks lend up to 75–80% on large loans.</div></div>
+    <div class="ctl"><div class="lab"><span>Home-loan interest rate</span><b id="rateV"></b></div><input type="range" id="rate" min="0.06" max="0.12" step="0.0025"></div>
+    <div class="ctl"><div class="lab"><span>Loan tenure</span><b id="tenV"></b></div><input type="range" id="tenure" min="5" max="30" step="1"></div>
+    <div class="ctl"><div class="lab"><span>Return if the money is invested instead</span><b id="invV"></b></div><input type="range" id="inv" min="0.03" max="0.12" step="0.0025"><div class="hint">After tax. This is what a renter earns on the cash a buyer would spend.</div></div>
+    <label class="chk"><input type="checkbox" id="taxded"> Claim home-loan tax deductions in India</label>
+    <div class="hint" style="margin-top:-6px">Only helps if you have taxable Indian income and use the old tax regime.</div>
+    <div class="ctl" id="slabCtl" hidden><div class="lab"><span>Your Indian income-tax rate</span><b id="slabV"></b></div><input type="range" id="slab" min="0" max="0.3" step="0.05"></div>
+  </details>
+
+  <details class="grp">
+    <summary>Market and time</summary>
+    <div class="ctl"><div class="lab"><span>Annual house-price growth</span><b id="grV"></b></div><input type="range" id="growth" min="0" max="0.12" step="0.0025"></div>
+    <div class="ctl"><div class="lab"><span>Rental yield (rent ÷ price)</span><b id="yldV"></b></div><input type="range" id="yield" min="0.015" max="0.05" step="0.001"><div class="hint" id="rentHint"></div></div>
+    <div class="ctl"><div class="lab"><span>Annual rent increase</span><b id="resV"></b></div><input type="range" id="rentesc" min="0" max="0.12" step="0.0025"></div>
+    <div class="ctl"><div class="lab"><span>Security deposit</span><b id="depV"></b></div><input type="range" id="deposit" min="0" max="10" step="1"></div>
+    <div class="ctl"><div class="lab"><span>When renting, move home every</span><b id="movV"></b></div><input type="range" id="moveN" min="1" max="10" step="1"></div>
+    <div class="ctl"><div class="lab"><span>Society maintenance per sq ft / month</span><b id="mntV"></b></div><input type="range" id="maint" min="0" max="15" step="0.5"></div>
+    <div class="ctl"><div class="lab"><span>Cost inflation (maintenance, tax)</span><b id="infV"></b></div><input type="range" id="infl" min="0" max="0.1" step="0.0025"></div>
+    <div class="ctl"><div class="lab"><span>Years you will hold the home</span><b id="yrsV"></b></div><input type="range" id="years" min="3" max="30" step="1"></div>
+    <div class="ctl"><div class="lab"><span>Capital gains tax rate (before surcharge & cess)</span><b id="cgV"></b></div><input type="range" id="cgt" min="0" max="0.3" step="0.005"><div class="hint">12.5% for property held 24+ months (since July 2024).</div></div>
+  </details>
+  <p class="note">Your settings are remembered on this device.</p>
+</aside>
+
+<main>
+  <section class="hero" aria-live="polite">
+    <div>
+      <div class="verdict" id="verdict">–</div>
+      <div class="verdict-sub" id="verdictSub"></div>
+      <div class="ban" id="resBan" hidden></div>
+      <div class="seg" id="exitSeg" style="max-width:360px;margin-top:12px"><button type="button" data-v="pass" aria-pressed="true">Pass the home to family</button><button type="button" data-v="sell" aria-pressed="false">Sell at the end</button></div>
+    </div>
+    <div class="beam" aria-hidden="true">
+      <svg viewBox="0 0 400 190" role="img">
+        <polygon points="200,72 182,170 218,170" fill="var(--haldi)"/>
+        <rect x="150" y="168" width="100" height="8" rx="4" fill="var(--haldi)"/>
+        <g class="beam-g" id="beamG">
+          <rect x="30" y="66" width="340" height="8" rx="4" fill="var(--ink)"/>
+          <line x1="60" y1="74" x2="60" y2="104" stroke="var(--ink2)" stroke-width="2"/>
+          <line x1="340" y1="74" x2="340" y2="104" stroke="var(--ink2)" stroke-width="2"/>
+          <path d="M20 104 h80 a40 22 0 0 1 -80 0z" fill="var(--neem)"/>
+          <path d="M300 104 h80 a40 22 0 0 1 -80 0z" fill="var(--rent)"/>
+          <text x="60" y="50" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="18" fill="var(--neem)">Buy</text>
+          <text x="340" y="50" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="18" fill="var(--rent)">Rent</text>
+          <text x="60" y="144" text-anchor="middle" font-size="14" fill="var(--ink)" id="beamBuy"></text>
+          <text x="340" y="144" text-anchor="middle" font-size="14" fill="var(--ink)" id="beamRent"></text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <div class="kpis" id="kpis"></div>
+
+  <section class="panel">
+    <h2>How the numbers move</h2>
+    <div class="charts">
+      <div><div class="chartcap">Wealth from the decision, year by year</div><div class="chartbox"><canvas id="cWealth"></canvas></div></div>
+      <div><div class="chartcap">Monthly housing cost: buying vs renting</div><div class="chartbox"><canvas id="cMonthly"></canvas></div></div>
+      <div><div class="chartcap">If house prices grow faster or slower. Bars above zero mean buying wins; below zero, renting wins.</div><div class="chartbox"><canvas id="cGrowth"></canvas></div></div>
+      <div><div class="chartcap">Effect of loan size (advantage of buying)</div><div class="chartbox"><canvas id="cLoan"></canvas></div></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Cash you need on day one</h2>
+    <div class="breakdown" id="breakdown"></div>
+    <p class="note" id="stampNote"></p>
+  </section>
+
+  <section class="panel">
+    <h2 id="cityTitle">Living in Pune</h2>
+    <p id="cityBlurb" class="verdict-sub" style="margin-top:0"></p>
+    <div class="two">
+      <div><h3>Pros</h3><ul class="pc pros" id="pros"></ul></div>
+      <div><h3>Cons</h3><ul class="pc cons" id="cons"></ul></div>
+    </div>
+    <h3>Best areas for your family</h3>
+    <div class="areas" id="areas"></div>
+    <h3 id="projTitle">Projects</h3>
+    <div class="tblwrap"><table id="projects" class="stack"></table></div>
+    <p class="note" id="projNote"></p>
+  </section>
+
+  <section class="panel">
+    <h2>Monthly household budget</h2>
+    <p class="note" style="margin-top:0">Everyday living for your family in this city, plus housing. Living costs are the same whether you buy or rent.</p>
+    <div class="tblwrap"><table id="budget"></table></div>
+  </section>
+
+  <section class="panel">
+    <h2>How the 15 cities fit your family</h2>
+    <p class="note" style="margin-top:0">Scores weigh healthcare and clean air more heavily when seniors live with you, schools when children do, and flight links when you travel abroad. Select a row to switch city.</p>
+    <div class="tblwrap"><table id="league"></table></div>
+  </section>
+
+  <section class="panel rec">
+    <h2>Recommendation</h2>
+    <ol id="rec"></ol>
+    <div class="ai" id="aiBox" hidden>
+      <strong>Want a written briefing?</strong>
+      <p class="note" style="margin:4px 0 8px">Claude writes a short briefing for your exact selections. It draws on Claude's general knowledge, which may be out of date – check prices and project status before acting.</p>
+      <button type="button" id="aiBtn">Write my briefing</button>
+      <div class="ai-out" id="aiOut"></div>
+    </div>
+    <p style="margin-top:12px"><button type="button" class="btn" id="csvBtn" hidden>Download year-by-year table (CSV)</button></p>
+  </section>
+
+  <footer>
+    Data snapshot: 12 November 2026. USD, QAR and AED rates from market closes around 9 November 2026; GBP, EUR, SGD, AUD and CAD are estimated cross rates – type today's rate in the box at the top. RBI repo rate 5.50% after the 7 October 2026 hike. City prices, yields, stamp duty and air-quality figures are indicative averages for premium homes, not quotes; Pune projects come from listing portals in November 2026; other cities list well-known communities to check, not verified availability. This page cannot fetch live data, so figures do not update on their own. Not financial, legal or tax advice – verify with a local advocate, chartered accountant and the state RERA site before buying.
+  </footer>
+</main>
+</div>
+<div class="sticky-v" id="stickyBar"><div class="txt" id="stickyV"></div><button type="button" class="btn" id="openSheet" aria-controls="sheet" aria-expanded="false">Adjust</button></div>
+<div class="backdrop" id="backdrop"></div>
+
+<script>
+"use strict";
+/* ---------------- DATA ---------------- */
+const FX = {INR:{r:1,src:"base"},USD:{r:93.9,src:"market close ~9 Nov 2026"},QAR:{r:25.8,src:"pegged to USD"},AED:{r:25.57,src:"pegged to USD"},
+  GBP:{r:124,src:"estimate"},EUR:{r:108,src:"estimate"},SGD:{r:72,src:"estimate"},AUD:{r:62,src:"estimate"},CAD:{r:68,src:"estimate"}};
+const SYM={INR:"₹",USD:"$",QAR:"QAR ",AED:"AED ",GBP:"£",EUR:"€",SGD:"S$",AUD:"A$",CAD:"C$"};
+// stamp = stamp duty incl. cess, reg = registration, cap = registration cap (0 none), wc = woman concession (points)
+const C = [
+ {n:"Pune",st:"Maharashtra",psf:14000,vpsf:11000,yld:0.026,gr:0.05,stamp:0.06,reg:0.01,cap:30000,wc:0.01,mnt:6,dep:3,aqi:95,h:5,s:5,c:4,a:3,ci:100,
+  blurb:"Mild climate, top hospitals and a big retiree community, with green hill suburbs on the west side.",
+  pros:["Deenanath Mangeshkar, Ruby Hall and Jehangir hospitals","Pleasant climate most of the year","Green western hills: Pashan, Bavdhan, Bhugaon","Strong schools and universities","Large choice of gated communities and senior living"],
+  cons:["Winter air around 90–110 US AQI; worst Dec–Jan","Traffic on main corridors","Mula-Mutha river is polluted","Limited direct international flights"],
+  areas:[["Kothrud","health green senior","Next to Deenanath Mangeshkar; hill views; settled community"],["Bavdhan / Bhugaon","green villa senior quiet","Greenest belt; Forest Trails township; car needed"],["Baner / Balewadi","schools connect","Modern, well-served; busier roads"],["Pashan","green quiet","Lake and hills; quieter streets"],["Kalyani Nagar / Koregaon Park","health airport premium","Near Jehangir and the airport; urban"],["Kharadi","villa schools airport","Large villas and riverside towers; IT hub"],["NIBM / Undri","value villa quiet","More space for the money; farther from hospitals"]],
+  proj:[["Sobha Nesara","Kothrud","apt",39000000,"Last tower Mar 2027; partly ready"],["Panchshil Eon Waterfront","Kharadi","apt",46000000,"Dec 2026; river-facing penthouses"],["Kolte Patil 24K Sereno","Baner","apt",35300000,"Nearing possession"],["VB Forest Castle","SB Road","apt",51000000,"Mar 2027"],["VTP Velvet Villas","Kharadi","villa",0,"RERA Dec 2026; ~70% built Apr 2026"],["Panchshil Yoo Villas (ready units)","Kharadi","villa",85000000,"Ready; new phase Dec 2027"],["Bhugaon villas (resale)","Bhugaon","villa",32000000,"Ready"],["Paranjape Athashri","Bhugaon / Baner","senior",0,"Senior-living communities"]],verified:true},
+ {n:"Mumbai (Navi Mumbai & Thane)",st:"Maharashtra",psf:20000,vpsf:18000,yld:0.028,gr:0.05,stamp:0.07,reg:0.01,cap:30000,wc:0.01,mnt:8,dep:4,aqi:110,h:5,s:5,c:3,a:5,ci:130,
+  blurb:"India's best-connected metro, with greener suburbs in Navi Mumbai and along Thane's hills.",
+  pros:["Top-tier hospitals","Two airports including the new Navi Mumbai airport","Excellent schools","Green pockets: Kharghar hills, Yeoor hills, Powai lake"],
+  cons:["Highest prices on this list","Humid; heavy monsoon flooding in places","Winter air quality dips","Long commutes"],
+  areas:[["Kharghar","green value schools","Hills and Central Park; near the new airport"],["Palm Beach Road (Vashi–Nerul)","premium health","Wide road, sea views, hospitals"],["Thane – Ghodbunder Road","green villa schools","Yeoor hills and large townships"],["Powai","health premium connect","Lake, Hiranandani hospital, offices"],["Panvel","value airport","Newer, cheaper; near the airport"]],
+  proj:[["Hiranandani Estate","Thane","apt",0,"Large established township"],["Lodha Amara","Thane","apt",0,"Large township"],["Godrej projects","Navi Mumbai / Thane","apt",0,"Several launches"]]},
+ {n:"Bengaluru",st:"Karnataka",psf:13000,vpsf:11000,yld:0.032,gr:0.06,stamp:0.056,reg:0.01,cap:0,wc:0,mnt:5,dep:8,aqi:75,h:5,s:5,c:5,a:5,ci:110,
+  blurb:"Cool, green climate and world-class healthcare, at the price of heavy traffic.",
+  pros:["Best year-round climate of the big metros","Narayana, Manipal, Apollo and many specialty hospitals","Top international schools","Strong rental demand"],
+  cons:["Severe traffic","Summer water shortages in some areas","High security deposits (often 6–10 months)","Lakes vary in quality"],
+  areas:[["Whitefield","schools health villa","Large communities; senior living nearby"],["Hebbal / Thanisandra","airport green","Lakes; quick airport access"],["JP Nagar / Kanakapura Road","green health quiet","Leafy; metro; senior communities"],["Sarjapur Road","schools villa","Villas and schools; traffic"],["Devanahalli","value villa airport","Plotted villas near the airport"]],
+  proj:[["Prestige Lakeside Habitat","Whitefield","apt",0,"Large lakeside community"],["Embassy Lake Terraces","Hebbal","apt",0,"Luxury, lake views"],["Sobha Dream Acres","Panathur","apt",0,"Large township"],["Columbia Pacific Communities","Whitefield / Kanakapura","senior",0,"Senior living"]]},
+ {n:"Mysuru",st:"Karnataka",psf:7000,vpsf:6000,yld:0.026,gr:0.05,stamp:0.056,reg:0.01,cap:0,wc:0,mnt:3,dep:4,aqi:50,h:3,s:3,c:5,a:2,ci:80,
+  blurb:"Calm heritage city with clean air, low costs and Bengaluru about three hours away.",
+  pros:["Some of the cleanest air on this list","Low living costs","Gracious, green neighbourhoods","Expressway to Bengaluru"],
+  cons:["Fewer super-specialty hospitals","Small airport; fly via Bengaluru","Fewer premium gated projects","Smaller rental market"],
+  areas:[["Gokulam / Jayalakshmipuram","green quiet senior","Old, leafy, central"],["Vijayanagar","schools value","Planned layout, good services"],["Kuvempunagar","health value","Near hospitals"],["Bogadi / Hinkal","villa value","Newer villa layouts"]],
+  proj:[["Mostly plotted villas and local developers","Mysuru","villa",0,"Check Karnataka RERA"]]},
+ {n:"Chennai",st:"Tamil Nadu",psf:11000,vpsf:9000,yld:0.028,gr:0.05,stamp:0.07,reg:0.02,cap:0,wc:0,mnt:4,dep:5,aqi:75,h:5,s:4,c:2,a:5,ci:95,
+  blurb:"A medical capital by the sea – hot and humid, but strong value.",
+  pros:["Apollo, MIOT, Sri Ramachandra; CMC Vellore within reach","Beaches and sea breeze","Good value vs Bengaluru and Mumbai","Strong international flights"],
+  cons:["Hot, humid most of the year","Flood risk in low-lying areas","Water stress in summer","Higher stamp + registration (about 9%)"],
+  areas:[["Adyar / Besant Nagar","health green senior","Beach, trees, hospitals"],["Anna Nagar","schools health","Central, planned, parks"],["OMR / ECR","villa schools","Villas and IT corridor; check flood maps"],["Porur","health value","Near Sri Ramachandra"],["Velachery","connect value","Metro; check flooding history"]],
+  proj:[["Prestige Bella Vista","Porur","apt",0,"Large community"],["Casagrand projects","Several","apt",0,"Many launches"],["Ashiana Shubham","Maraimalai Nagar","senior",0,"Senior living"]]},
+ {n:"Coimbatore",st:"Tamil Nadu",psf:7500,vpsf:6500,yld:0.027,gr:0.05,stamp:0.07,reg:0.02,cap:0,wc:0,mnt:3,dep:4,aqi:50,h:4,s:3,c:4,a:3,ci:80,
+  blurb:"Pleasant, clean and quietly popular with retirees, near the Nilgiri hills.",
+  pros:["Clean air and mild climate","KMCH, PSG, Ganga hospitals","Low living costs","Established senior communities"],
+  cons:["Fewer international flights (Sharjah, Singapore)","Smaller premium market","Less cosmopolitan","Higher stamp + registration"],
+  areas:[["RS Puram","health senior central","Old, central, near hospitals"],["Vadavalli / Thondamuthur","green villa quiet","Foothills, cooler"],["Saravanampatti","schools value","Newer, IT area"],["Peelamedu","airport health","Near airport and hospitals"]],
+  proj:[["Covai Care communities","Several","senior",0,"Senior living"],["Shriram and Casagrand projects","Several","apt",0,"Check TN RERA"]]},
+ {n:"Hyderabad",st:"Telangana",psf:11000,vpsf:10000,yld:0.03,gr:0.06,stamp:0.07,reg:0.005,cap:0,wc:0,mnt:4,dep:2,aqi:90,h:5,s:4,c:3,a:5,ci:95,
+  blurb:"Big-city amenities at good value, with excellent roads and a busy airport.",
+  pros:["AIG, Apollo, KIMS, Yashoda hospitals","Very good roads and airport","Better value than Bengaluru or Mumbai","Many villa communities"],
+  cons:["Hot summers","Moderate air quality","Sprawl – distances are long","Rents rise quickly in IT areas"],
+  areas:[["Kokapet / Narsingi","villa premium","Luxury towers and villas"],["Gachibowli / Financial District","schools health connect","Hospitals, offices, schools"],["Jubilee & Banjara Hills","health premium","Central, established"],["Tellapur","villa value green","Villas, more space"],["Shamshabad","airport value","Near the airport"]],
+  proj:[["My Home Bhooja","HITEC City","apt",0,"Luxury towers"],["Prestige High Fields","Gachibowli","apt",0,"Large community"],["Rajapushpa projects","Kokapet / Tellapur","apt",0,"Several launches"]]},
+ {n:"Kochi",st:"Kerala",psf:9000,vpsf:8000,yld:0.024,gr:0.04,stamp:0.08,reg:0.02,cap:0,wc:0,mnt:4,dep:3,aqi:50,h:4,s:3,c:3,a:5,ci:90,
+  blurb:"Green, water-side living with strong healthcare and many Gulf flights.",
+  pros:["Clean air and greenery","Amrita, Aster Medcity, Lakeshore hospitals","Many direct flights to Doha and the Gulf","Strong healthcare culture"],
+  cons:["Humid; heavy monsoon; 2018 floods","Highest stamp + registration (about 10%)","Smaller job market","Slower price growth"],
+  areas:[["Kakkanad","schools value","IT area, newer homes"],["Edappally","health connect","Hospitals and malls"],["Marine Drive","premium health","Backwater views"],["Kalamassery","value airport","Towards the airport"]],
+  proj:[["Sobha Marina One","Marine Drive","apt",0,"Luxury waterfront"],["Prestige projects","Kochi","apt",0,"Check Kerala RERA"]]},
+ {n:"Goa",st:"Goa",psf:12000,vpsf:14000,yld:0.03,gr:0.06,stamp:0.055,reg:0.02,cap:0,wc:0,mnt:6,dep:2,aqi:45,h:3,s:3,c:4,a:4,ci:105,
+  blurb:"Relaxed coastal life with clean air and villa options – lighter on hospitals.",
+  pros:["Clean air and beaches","Villa and second-home market","Two airports","Relaxed pace"],
+  cons:["Limited tertiary care (GMC, Manipal Goa)","Tourist crowds in season","Heavy monsoon","Land titles need extra care"],
+  areas:[["Porvorim","health connect","Central, near Panaji"],["Panaji / Dona Paula","health premium","Capital, sea views"],["Assagao / Siolim","villa green quiet","North Goa villas"],["Margao / Benaulim","value quiet","South Goa, calmer"]],
+  proj:[["Isprava villas","North Goa","villa",0,"Luxury villas"],["Local developers","Goa","villa",0,"Check Goa RERA"]]},
+ {n:"Dehradun",st:"Uttarakhand",psf:7500,vpsf:7000,yld:0.024,gr:0.05,stamp:0.05,reg:0.02,cap:0,wc:0.0125,mnt:3,dep:2,aqi:100,h:3,s:4,c:4,a:2,ci:85,
+  blurb:"Hill-valley city near Mussoorie, with good schools and a purpose-built senior community.",
+  pros:["Cooler summers; hills nearby","Good boarding and day schools","Antara senior-living community","Calm pace"],
+  cons:["Valley smog in winter","Limited super-specialty care (AIIMS Rishikesh ~45 min)","Small airport","Traffic on main roads"],
+  areas:[["Rajpur Road","premium green health","Leafy, towards Mussoorie"],["Sahastradhara Road","green quiet","Newer homes, hills"],["Vasant Vihar","schools central","Established"],["Doiwala","airport value","Near the airport"]],
+  proj:[["Antara Dehradun","Dehradun","senior",0,"Senior living by Max"]]},
+ {n:"Chandigarh Tricity",st:"Chandigarh / Punjab",psf:9000,vpsf:8000,yld:0.025,gr:0.05,stamp:0.06,reg:0.01,cap:0,wc:0.02,mnt:4,dep:2,aqi:120,h:4,s:4,c:3,a:3,ci:95,
+  blurb:"India's best-planned city, green and orderly, with PGIMER close by.",
+  pros:["Planned, green sectors","PGIMER, Fortis Mohali","Wide roads; easy driving","Hills an hour away"],
+  cons:["Winter smog and crop-burning season","Hot summers, cold winters","Fewer international flights","Premium sectors rarely sell"],
+  areas:[["Chandigarh sectors","premium health green","Central, scarce supply"],["New Chandigarh / Mullanpur","villa green","Large plots, newer"],["Mohali Aerocity","airport value","Near the airport"],["Panchkula","green quiet","Hills, calmer"],["Zirakpur","value","Cheaper, busier"]],
+  proj:[["DLF Hyde Park Estate","Mullanpur","villa",0,"Villas and floors"],["Omaxe New Chandigarh","Mullanpur","apt",0,"Township"]]},
+ {n:"Jaipur",st:"Rajasthan",psf:7000,vpsf:6000,yld:0.026,gr:0.05,stamp:0.06,reg:0.01,cap:0,wc:0.01,mnt:3,dep:2,aqi:130,h:4,s:3,c:2,a:3,ci:85,
+  blurb:"Affordable heritage city with good roads and established senior communities.",
+  pros:["Low prices and living costs","SMS, Fortis, Narayana hospitals","Good roads","Ashiana senior communities"],
+  cons:["Very hot, dry summers","Dust and winter air","Water stress","Limited international flights"],
+  areas:[["Malviya Nagar","health central","Hospitals, markets"],["C-Scheme","premium central","Old, prestigious"],["Vaishali Nagar","schools value","Popular family area"],["Jagatpura","value villa","Newer, more space"]],
+  proj:[["Ashiana Ekansh","Jaipur","senior",0,"Senior living"],["Mahima and local developers","Jaipur","apt",0,"Check Rajasthan RERA"]]},
+ {n:"Nashik",st:"Maharashtra",psf:7000,vpsf:5500,yld:0.026,gr:0.05,stamp:0.06,reg:0.01,cap:30000,wc:0.01,mnt:3,dep:2,aqi:80,h:3,s:3,c:4,a:1,ci:80,
+  blurb:"Mild, quiet wine-country city three to four hours from Mumbai and Pune.",
+  pros:["Mild climate","Low costs","Godavari riverfront and vineyards","Easy drive to Mumbai and Pune"],
+  cons:["Tier-2 healthcare","Very limited flights","Few premium projects","Smaller social scene"],
+  areas:[["Gangapur Road","green health","Leafy, near the river"],["College Road","central schools","Established"],["Indira Nagar","value","Family area"],["Pathardi","value villa","Newer, more space"]],
+  proj:[["Local developers","Nashik","apt",0,"Check MahaRERA"]]},
+ {n:"Puducherry",st:"Puducherry",psf:6500,vpsf:6000,yld:0.025,gr:0.04,stamp:0.07,reg:0.01,cap:0,wc:0,mnt:3,dep:3,aqi:50,h:4,s:2,c:3,a:1,ci:85,
+  blurb:"Small, seaside and slow-paced, with JIPMER for healthcare.",
+  pros:["Seaside town with a French quarter","JIPMER hospital","Low costs","Calm pace; Auroville nearby"],
+  cons:["Humid; cyclone season","Fly via Chennai (about 3 hours)","Small property market","Limited schools"],
+  areas:[["White Town","premium quiet","Heritage quarter"],["Lawspet","value health","Residential, central"],["Auroville area","green quiet villa","Rural, community-minded"]],
+  proj:[["Local developers","Puducherry","apt",0,"Check Puducherry RERA"]]},
+ {n:"Gurugram (Delhi NCR)",st:"Haryana",psf:18000,vpsf:16000,yld:0.028,gr:0.06,stamp:0.07,reg:0.01,cap:0,wc:0.02,mnt:8,dep:2,aqi:180,h:5,s:5,c:2,a:5,ci:125,
+  blurb:"Premium towers and top hospitals next to Delhi airport – but the worst air on this list.",
+  pros:["Medanta, Artemis, FMRI hospitals","Next to Delhi airport","Luxury projects","Strong schools"],
+  cons:["Severe winter air pollution","Hot summers; water stress","High prices","Traffic"],
+  areas:[["Golf Course Road","premium health","Luxury towers"],["Golf Course Extension","schools premium","Newer luxury"],["Sohna Road","value","Cheaper; growing"],["Dwarka Expressway","airport value","Near the airport"]],
+  proj:[["DLF The Camellias","Golf Course Road","apt",0,"Ultra-luxury"],["DLF The Arbour","Sector 63","apt",0,"Luxury"],["Antara Noida / Ashiana Bhiwadi","NCR","senior",0,"Senior living nearby"]]}
+];
+
+/* ---------------- STATE ---------------- */
+const DEF = {city:0,adults:2,children:1,seniors:2,travel:true,fees:600000,type:"apt",status:"ready",autosize:true,sqft:2600,priceMode:"rate",psf:null,price:50000000,interior:1800,woman:false,
+  ltv:0.75,rate:0.085,tenure:20,inv:0.07,growth:null,yield:null,rentesc:0.06,deposit:null,moveN:3,maint:null,infl:0.05,years:20,cgt:0.125,exit:"pass",cur:"INR",fx:null,residency:"oci",taxded:false,slab:0.3};
+let S = Object.assign({}, DEF);
+try{ const saved = JSON.parse(localStorage.getItem("rhp-state")||"null"); if(saved) S = Object.assign({}, DEF, saved); }catch(e){}
+function cityDefaults(force){
+  const c=C[S.city];
+  if(force||S.psf==null) S.psf = S.type==="villa"? c.vpsf : c.psf;
+  if(force||S.growth==null) S.growth = c.gr + (S.type==="villa"?0.01:0);
+  if(force||S.yield==null) S.yield = Math.max(0.015, c.yld - (S.type==="villa"?0.005:0));
+  if(force||S.deposit==null) S.deposit = c.dep;
+  if(force||S.maint==null) S.maint = S.type==="villa"? Math.round(c.mnt*0.6*2)/2 : c.mnt;
+}
+cityDefaults(false);
+function save(){ try{ localStorage.setItem("rhp-state", JSON.stringify(S)); }catch(e){} }
+
+/* ---------------- FORMAT ---------------- */
+const $=id=>document.getElementById(id);
+function rate(){ return S.fx || FX[S.cur].r; }
+function money(inr, compact=true){
+  if(inr==null||isNaN(inr)) return "–";
+  const neg = inr<0; let x=Math.abs(inr);
+  let out;
+  if(S.cur==="INR"){
+    if(compact && x>=1e7) out="₹"+(x/1e7).toFixed(x>=1e9?0:2)+" Cr";
+    else if(compact && x>=1e5) out="₹"+(x/1e5).toFixed(1)+" L";
+    else out="₹"+Math.round(x).toLocaleString("en-IN");
+  } else {
+    x = x/rate(); const s=SYM[S.cur];
+    if(compact && x>=1e6) out=s+(x/1e6).toFixed(2)+"M";
+    else if(compact && x>=1e4) out=s+(x/1e3).toFixed(0)+"K";
+    else out=s+Math.round(x).toLocaleString("en-GB");
+  }
+  return (neg?"−":"")+out;
+}
+const pct=(v,d=1)=>(v*100).toFixed(d)+"%";
+function inrNote(inr){ return S.cur==="INR"?"":" (₹"+(Math.abs(inr)>=1e7?(inr/1e7).toFixed(2)+" Cr":(inr/1e5).toFixed(1)+" L")+")"; }
+
+/* ---------------- MODEL ---------------- */
+function bedrooms(){ return Math.min(7, Math.max(2, Math.ceil(S.adults/2) + Math.ceil(S.children/1.5) + Math.ceil(S.seniors/2) + 1)); }
+function autoSqft(){ return Math.round((500 + 520*bedrooms())/50)*50; }
+function pmt(r,n,pv){ if(pv<=0) return 0; const i=r/12; return pv*i/(1-Math.pow(1+i,-n)); }
+function model(o){
+  const p = Object.assign({}, S, o||{}); const c=C[p.city];
+  const sqft=p.sqft, P = p.priceMode==="direct"? p.price : sqft*p.psf;
+  const villa = p.type==="villa";
+  const stampRate = Math.max(0, c.stamp - (p.woman? c.wc:0));
+  const stamp=P*stampRate, reg = c.cap? Math.min(P*c.reg,c.cap) : P*c.reg, gst = p.status==="uc"? P*0.05:0;
+  const legal=100000, poss = sqft*p.maint*12 + 150000;
+  const loan=P*p.ltv, emi=pmt(p.rate,p.tenure*12,loan), proc=loan*0.005*1.18;
+  const interiors=sqft*p.interior, down=P-loan;
+  const nonRes = p.residency!=="res";
+  const fxc = nonRes? (down+stamp+reg+gst+legal+poss+proc+interiors)*0.005 : 0;
+  const upfront = down+stamp+reg+gst+legal+poss+proc+interiors+fxc;
+  const acq = P+stamp+reg+gst;
+  const own1 = sqft*p.maint*12 + P*(0.002 + (villa?0.0006:0.0004) + (villa?0.005:0.002));
+  const rent1 = P*p.yield/12, dep = rent1*p.deposit;
+  const eff = p.cgt*1.15*1.04;
+  const Y=[]; let inv=(upfront-dep), cumB=upfront, cumR=dep, prevBal=loan, taxSaved=0;
+  for(let y=1;y<=30;y++){
+    const emiY = y<=p.tenure? emi*12:0;
+    const ownY = own1*Math.pow(1+p.infl,y-1);
+    let bal=0; if(loan>0){ const i=p.rate/12, k=Math.min(y,p.tenure)*12; bal=Math.max(0, loan*Math.pow(1+i,k) - emi*(Math.pow(1+i,k)-1)/i); }
+    const princY=Math.max(0,prevBal-bal), intY=Math.max(0,emiY-princY); prevBal=bal;
+    const taxY = p.taxded? (Math.min(intY,200000)+Math.min(princY,150000))*p.slab : 0;
+    if(y<=p.years) taxSaved+=taxY;
+    const buyY = emiY+ownY-taxY;
+    const rentM = rent1*Math.pow(1+p.rentesc,y-1);
+    const rentY = rentM*12 + ((y-1)%p.moveN===0? rentM:0);
+    inv = inv*(1+p.inv) + (buyY-rentY);
+    const V = P*Math.pow(1+p.growth,y);
+    const wSell = V - bal - V*0.01 - Math.max(0, V*0.99-acq)*eff;
+    const wPass = V - bal;
+    const wRent = inv + dep;
+    cumB+=buyY; cumR+=rentY;
+    Y.push({y,emiY,ownY,buyY,rentY,inv,V,bal,wSell,wPass,wRent,cumB,cumR});
+  }
+  const at=Y[p.years-1];
+  const adv = (p.exit==="sell"? at.wSell:at.wPass) - at.wRent;
+  const advSell=at.wSell-at.wRent, advPass=at.wPass-at.wRent;
+  const be = k=>{ const f=Y.find(r=>r[k]-r.wRent>0); return f? f.y:null; };
+  return {P,sqft,stamp,stampRate,reg,gst,legal,poss,loan,emi,proc,interiors,down,upfront,own1,rent1,dep,Y,at,adv,advSell,advPass,beSell:be("wSell"),bePass:be("wPass"),c,fxc,taxSaved};
+}
+
+/* ---------------- CITY FIT ---------------- */
+function fit(c){
+  const air=Math.max(0,Math.min(1,(200-c.aqi)/150)), aff=Math.max(0,Math.min(1,1-(c.psf-6000)/14000));
+  const w={h:1+0.7*Math.min(S.seniors,3), air:1+0.3*(S.seniors+S.children), c:0.7+0.2*S.seniors, s:0.2+0.8*Math.min(S.children,2), a:S.travel?1:0.4, aff:1};
+  const v={h:c.h/5, air, c:c.c/5, s:c.s/5, a:c.a/5, aff};
+  let t=0,sw=0; for(const k in w){ t+=w[k]*v[k]; sw+=w[k]; }
+  return Math.round(t/sw*100);
+}
+function needs(){
+  const n=new Set();
+  if(S.seniors>0){ n.add("health"); n.add("green"); n.add("senior"); n.add("quiet"); }
+  if(S.children>0) n.add("schools");
+  if(S.travel) n.add("airport");
+  if(S.type==="villa") n.add("villa");
+  if(S.ltv>0.5 || S.psf < C[S.city].psf*0.9) n.add("value");
+  if(!n.size) n.add("green");
+  return n;
+}
+
+/* ---------------- CONTROLS ---------------- */
+const SL = {fees:["feesV",v=>money(v)],sqft:["sqftV",v=>Math.round(v).toLocaleString("en-IN")+" sq ft"],psf:["psfV",v=>money(v,false)+"/sq ft"],price:["priceV",v=>money(v)],
+  interior:["intV",v=>money(v,false)],ltv:["ltvV",v=>Math.round(v*100)+"%"],rate:["rateV",v=>pct(v,2)],tenure:["tenV",v=>v+" yrs"],inv:["invV",v=>pct(v,2)],
+  growth:["grV",v=>pct(v,2)],yield:["yldV",v=>pct(v,1)],rentesc:["resV",v=>pct(v,2)],deposit:["depV",v=>v+" months' rent"],moveN:["movV",v=>v+(v==1?" year":" years")],
+  maint:["mntV",v=>"₹"+v],infl:["infV",v=>pct(v,2)],years:["yrsV",v=>v+" years"],cgt:["cgV",v=>pct(v,1)],slab:["slabV",v=>pct(v,0)]};
+function fill(el){ const p=(el.value-el.min)/(el.max-el.min)*100; el.style.setProperty("--p",p+"%"); }
+function syncControls(){
+  if(S.autosize) S.sqft=autoSqft();
+  for(const k in SL){ const el=$(k==="growth"?"growth":k==="yield"?"yield":k); if(!el) continue; el.value=S[k]; fill(el); $(SL[k][0]).textContent=SL[k][1](S[k]); }
+  $("city").value=S.city; fill($("city"));
+  $("adultsN").textContent=S.adults; $("childrenN").textContent=S.children; $("seniorsN").textContent=S.seniors;
+  $("travel").checked=S.travel; $("autosize").checked=S.autosize; $("woman").checked=S.woman;
+  $("sqft").disabled=S.autosize;
+  $("bhkHint").textContent = S.autosize? `Suggested ${bedrooms()} bedrooms for your family. Untick above to set your own size.` : `About ${Math.max(1,Math.round((S.sqft-500)/520))} bedrooms.`;
+  setSeg("typeSeg",S.type); setSeg("statusSeg",S.status); setSeg("priceSeg",S.priceMode); setSeg("exitSeg",S.exit); setSeg("residencySeg",S.residency);
+  $("taxded").checked=S.taxded; $("slabCtl").hidden=!S.taxded;
+  $("resHint").textContent={res:"Indian passport, living in India.",nri:"Indian passport, living abroad.",oci:"Foreign passport with an OCI card – same property rights as an NRI.",foreign:"Foreign passport without an OCI card."}[S.residency];
+  $("psfCtl").hidden = S.priceMode==="direct"; $("priceCtl").hidden = S.priceMode!=="direct";
+  $("currency").value=S.cur; $("fxrate").value = S.cur==="INR"? 1 : rate(); $("fxrate").disabled = S.cur==="INR";
+  $("fxnote").textContent = S.cur==="INR"? "" : (S.fx? "your rate" : FX[S.cur].src);
+  document.querySelectorAll("#cityTicks button").forEach((b,i)=>b.classList.toggle("on",i===S.city));
+}
+function setSeg(id,v){ document.querySelectorAll("#"+id+" button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.v===v))); }
+
+function build(){
+  const sel=$("currency"); Object.keys(FX).forEach(k=>{ const o=document.createElement("option"); o.value=k; o.textContent=k; sel.appendChild(o); });
+  const t=$("cityTicks"); C.forEach((c,i)=>{ const b=document.createElement("button"); b.type="button"; b.title=c.n; b.setAttribute("aria-label",c.n); b.onclick=()=>{ S.city=i; cityDefaults(true); update(); }; t.appendChild(b); });
+  for(const k in SL){ const el=$(k); if(!el) continue; el.addEventListener("input",()=>{ S[k]=parseFloat(el.value); if(k==="sqft") S.autosize=false; update(); }); }
+  $("city").addEventListener("input",e=>{ S.city=parseInt(e.target.value,10); cityDefaults(true); update(); });
+  document.querySelectorAll("[data-step]").forEach(b=>b.addEventListener("click",()=>{ const [k,d]=b.dataset.step.split(":"); const lim={adults:[1,6],children:[0,5],seniors:[0,4]}[k]; S[k]=Math.max(lim[0],Math.min(lim[1],S[k]+parseInt(d,10))); update(); }));
+  $("travel").onchange=e=>{S.travel=e.target.checked;update();};
+  $("autosize").onchange=e=>{S.autosize=e.target.checked;update();};
+  $("woman").onchange=e=>{S.woman=e.target.checked;update();};
+  $("taxded").onchange=e=>{S.taxded=e.target.checked;update();};
+  const segs={typeSeg:"type",statusSeg:"status",priceSeg:"priceMode",exitSeg:"exit",residencySeg:"residency"};
+  for(const id in segs) document.querySelectorAll("#"+id+" button").forEach(b=>b.addEventListener("click",()=>{
+    const key=segs[id]; if(key==="priceMode" && b.dataset.v==="direct" && S.priceMode!=="direct") S.price=Math.round(S.sqft*S.psf/500000)*500000;
+    S[key]=b.dataset.v; if(key==="residency"){ S.rate = S.residency==="res"?0.0825:0.085; S.inv = S.residency==="res"?0.065:0.07; } if(key==="type"){ const c=C[S.city]; S.psf=S.type==="villa"?c.vpsf:c.psf; S.growth=c.gr+(S.type==="villa"?0.01:0); S.yield=Math.max(0.015,c.yld-(S.type==="villa"?0.005:0)); S.maint=S.type==="villa"?Math.round(c.mnt*1.2)/2:c.mnt; }
+    update(); }));
+  $("currency").onchange=e=>{ S.cur=e.target.value; S.fx=null; update(); };
+  $("fxrate").onchange=e=>{ const v=parseFloat(e.target.value); S.fx = v>0? v:null; update(); };
+  $("resetBtn").onclick=()=>{ cityDefaults(true); S.autosize=true; update(); };
+}
+
+/* ---------------- CHARTS ---------------- */
+let charts={};
+function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+function mkChart(id,type,data,opts){
+  if(typeof Chart==="undefined") return;
+  const ink=css("--ink2"), line=css("--line");
+  const base={responsive:true,maintainAspectRatio:false,animation:{duration:300},plugins:{legend:{labels:{color:ink,boxWidth:12}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+": "+money(ctx.parsed.y*(opts&&opts.lakh?1e5:1))}}},
+    scales:{x:{ticks:{color:ink},grid:{color:line}},y:{ticks:{color:ink,callback:v=>money(v*(opts&&opts.lakh?1e5:1))},grid:{color:line}}}};
+  if(opts&&opts.xTitle) base.scales.x.title={display:true,text:opts.xTitle,color:ink};
+  if(opts&&opts.legend) base.plugins.legend.labels.generateLabels=opts.legend;
+  if(charts[id]){ charts[id].data=data; charts[id].options=base; charts[id].update(); return; }
+  charts[id]=new Chart($(id),{type,data,options:base});
+}
+function drawCharts(m){
+  const N=Math.max(S.years,5), yrs=m.Y.slice(0,N), lab=yrs.map(r=>r.y);
+  const g=css("--neem"), g2=css("--neem2"), r=css("--rent"), h=css("--haldi");
+  mkChart("cWealth","line",{labels:lab,datasets:[
+    {label:"Buy – pass on",data:yrs.map(x=>x.wPass),borderColor:g,backgroundColor:g,pointRadius:0,borderWidth:2.5},
+    {label:"Buy – sell",data:yrs.map(x=>x.wSell),borderColor:g2,backgroundColor:g2,borderDash:[6,4],pointRadius:0,borderWidth:2},
+    {label:"Rent and invest",data:yrs.map(x=>x.wRent),borderColor:r,backgroundColor:r,pointRadius:0,borderWidth:2.5}]},{xTitle:"Year"});
+  mkChart("cMonthly","line",{labels:lab,datasets:[
+    {label:"Buying (EMI + upkeep)",data:yrs.map(x=>x.buyY/12),borderColor:g,backgroundColor:g,pointRadius:0,borderWidth:2.5,stepped:false},
+    {label:"Renting",data:yrs.map(x=>x.rentY/12),borderColor:r,backgroundColor:r,pointRadius:0,borderWidth:2.5}]},{xTitle:"Year"});
+  const gs=[0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.10];
+  const gm=gs.map(v=>model({growth:v}));
+  mkChart("cGrowth","bar",{labels:gs.map(v=>pct(v,0)),datasets:[
+    {label:"Pass on",data:gm.map(x=>x.advPass),backgroundColor:gm.map(x=>x.advPass>=0?g:r)},
+    {label:"Sell",data:gm.map(x=>x.advSell),backgroundColor:gm.map(x=>x.advSell>=0?g2:css("--track"))}]},{xTitle:"Annual price growth",legend:ch=>{
+      const ink=css("--ink2"), tr=css("--track");
+      return [["Pass on: buying ahead",g,0],["Pass on: renting ahead",r,0],["Sell: buying ahead",g2,1],["Sell: renting ahead",tr,1]]
+        .map(([text,col,i])=>({text,fillStyle:col,strokeStyle:col,lineWidth:0,fontColor:ink,datasetIndex:i,hidden:!ch.isDatasetVisible(i)}));
+    }});
+  const ls=[0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8];
+  const lm=ls.map(v=>model({ltv:v}));
+  mkChart("cLoan","line",{labels:ls.map(v=>Math.round(v*100)+"%"),datasets:[
+    {label:"Pass on",data:lm.map(x=>x.advPass),borderColor:g,backgroundColor:g,borderWidth:2.5},
+    {label:"Sell",data:lm.map(x=>x.advSell),borderColor:g2,backgroundColor:g2,borderDash:[6,4],borderWidth:2},
+    {label:"Break-even line",data:ls.map(()=>0),borderColor:h,pointRadius:0,borderWidth:1}]},{xTitle:"Loan share of price"});
+}
+
+/* ---------------- RENDER ---------------- */
+function render(){
+  const m=model(), c=m.c, at=m.at, N=S.years;
+  const buyW = S.exit==="sell"? at.wSell:at.wPass;
+  const winner = m.adv>=0? "Buying":"Renting";
+  $("verdict").textContent = `${winner} leaves your family ${money(Math.abs(m.adv))} better off after ${N} years`;
+  const be = S.exit==="sell"? m.beSell:m.bePass;
+  $("verdictSub").textContent = (be? `Buying overtakes renting in year ${be}. ` : "At these settings buying never overtakes renting within 30 years. ") +
+    `Year one costs ${money(m.emi+m.own1/12)}/month to buy vs ${money(m.rent1)}/month to rent.`;
+  const ban=$("resBan");
+  if(S.residency==="foreign"){ ban.hidden=false; ban.textContent="Foreign citizens without an OCI card generally can't buy residential property in India – inheritance is the main exception. Renting is your route; the buying figures are shown only for comparison."; } else ban.hidden=true;
+  const big=Math.max(Math.abs(buyW),Math.abs(at.wRent),1), ang=Math.max(-14,Math.min(14,(buyW-at.wRent)/big*28));
+  $("beamG").style.transform=`rotate(${-ang}deg)`;
+  $("beamBuy").textContent=money(buyW); $("beamRent").textContent=money(at.wRent);
+  $("stickyV").textContent = `${winner} ahead by ${money(Math.abs(m.adv))} after ${N} yrs · ${c.n}`;
+  $("sheetV").textContent = `${winner} ahead by ${money(Math.abs(m.adv))} after ${N} years`;
+
+  const k=[
+    ["Property price",money(m.P),`${Math.round(m.sqft).toLocaleString("en-IN")} sq ft · ${S.type==="villa"?"villa":"apartment"}`+inrNote(m.P)],
+    ["Cash needed on day one",money(m.upfront),`Loan ${money(m.loan)}`],
+    ["Monthly EMI",money(m.emi),m.loan>0?`${S.tenure} yrs at ${pct(S.rate,2)}`:"No loan"],
+    ["Rent for a similar home",money(m.rent1)+"/mo",`Deposit ${money(m.dep)}`],
+    ["Buyer's wealth, year "+N,money(buyW),S.exit==="sell"?"after sale costs & tax":"home value less loan","buy"],
+    ["Renter's wealth, year "+N,money(at.wRent),"investments + deposit","rent"],
+  ];
+  $("kpis").innerHTML=k.map(x=>`<div class="kpi ${x[3]||""}"><div class="k">${x[0]}</div><div class="v">${x[1]}</div><div class="s">${x[2]}</div></div>`).join("");
+
+  const items=[["Down payment",m.down],["Stamp duty",m.stamp],["Registration",m.reg],["GST",m.gst],["Advance maintenance & corpus",m.poss],["Legal & title",m.legal],["Loan processing",m.proc],["Interiors",m.interiors],["Currency conversion from abroad (~0.5%)",m.fxc]];
+  const mx=Math.max(...items.map(i=>i[1]),1);
+  $("breakdown").innerHTML=items.map(i=>`<div class="brow"><span>${i[0]}</span><div class="bt"><div class="bf" style="width:${i[1]/mx*100}%"></div></div><span class="bv">${money(i[1])}</span></div>`).join("")+
+    `<div class="brow" style="font-weight:700"><span>Total</span><span></span><span class="bv">${money(m.upfront)}</span></div>`;
+  $("stampNote").textContent=`${c.st}: stamp duty about ${pct(m.stampRate,2)}${S.woman&&c.wc?" (with woman-buyer concession)":""}, registration ${pct(c.reg,1)}${c.cap?" capped at ₹"+c.cap.toLocaleString("en-IN"):""}. Approximate state rates – confirm with the sub-registrar or your advocate.`;
+
+  // city panel
+  $("cityName").textContent=c.n; $("citySub").textContent=`${c.st} · air ~${c.aqi} US AQI · fit ${fit(c)}/100`;
+  $("cityTitle").textContent="Living in "+c.n; $("cityBlurb").textContent=c.blurb;
+  $("pros").innerHTML=c.pros.map(p=>`<li>${p}</li>`).join(""); $("cons").innerHTML=c.cons.map(p=>`<li>${p}</li>`).join("");
+  if(S.seniors>0 && c.aqi>=110) $("cons").innerHTML+=`<li><strong>For your parents:</strong> air quality here is a real health concern in winter.</li>`;
+  const nd=needs();
+  const areas=c.areas.map(a=>{ const tags=a[1].split(" "); return {name:a[0],tags,why:a[2],score:tags.filter(t=>nd.has(t)).length}; }).sort((a,b)=>b.score-a.score);
+  const tagName={health:"near hospitals",green:"green",senior:"senior-friendly",quiet:"quiet",schools:"schools",airport:"airport",villa:"villas",value:"good value",premium:"premium",connect:"well connected",central:"central"};
+  $("areas").innerHTML=areas.slice(0,5).map(a=>`<div class="area"><b>${a.name}</b> – ${a.why}<br>${a.tags.map(t=>`<span class="tag ${nd.has(t)?"hit":""}">${tagName[t]||t}</span>`).join("")}</div>`).join("");
+  let pr=c.proj.slice();
+  const wantType = S.type==="villa"?"villa":"apt";
+  pr.sort((a,b)=>{ const sa=(a[2]===wantType?0:a[2]==="senior"&&S.seniors>0?1:2), sb=(b[2]===wantType?0:b[2]==="senior"&&S.seniors>0?1:2); if(sa!==sb) return sa-sb; return Math.abs((a[3]||m.P*9)-m.P)-Math.abs((b[3]||m.P*9)-m.P); });
+  $("projTitle").textContent = c.verified? "Projects close to possession" : "Communities to look at";
+  $("projects").innerHTML=`<tr><th>Name</th><th>Area</th><th>Type</th><th class="num">From</th><th>Status / note</th></tr>`+pr.map(p=>{
+    const fitBudget = p[3]? (p[3]<=m.P*1.25? "":" (above your budget)") : "";
+    return `<tr><td><b>${p[0]}</b></td><td data-label="Area">${p[1]}</td><td data-label="Type">${p[2]==="apt"?"Apartment":p[2]==="villa"?"Villa":"Senior living"}</td><td class="num" data-label="From">${p[3]?money(p[3]):"On request"}${fitBudget}</td><td data-label="Status">${p[4]}</td></tr>`; }).join("");
+  $("projNote").textContent = c.verified? "Prices and dates from listing portals, November 2026. Verify every project on MahaRERA before booking." :
+    "Well-known communities and senior-living brands to start your search – availability, prices and status not checked. Verify on the state RERA website.";
+
+  // budget
+  const ci=c.ci/100, living=ci*(S.adults*22000+S.children*15000+S.seniors*25000+25000), schools=S.fees*S.children/12, health=S.seniors*6000+ (S.adults+S.children)*1500;
+  const buyHousing=m.emi+m.own1/12, rentHousing=m.rent1;
+  $("budget").innerHTML=`<tr><th></th><th class="num">If you buy</th><th class="num">If you rent</th></tr>
+   <tr><td>Food, transport, utilities, help</td><td class="num">${money(living)}</td><td class="num">${money(living)}</td></tr>
+   <tr><td>Health insurance</td><td class="num">${money(health)}</td><td class="num">${money(health)}</td></tr>
+   <tr><td>School fees</td><td class="num">${money(schools)}</td><td class="num">${money(schools)}</td></tr>
+   <tr><td>Housing (year one)</td><td class="num">${money(buyHousing)}</td><td class="num">${money(rentHousing)}</td></tr>
+   <tr><td><b>Total per month</b></td><td class="num"><b>${money(living+health+schools+buyHousing)}</b></td><td class="num"><b>${money(living+health+schools+rentHousing)}</b></td></tr>`;
+
+  // league
+  const rows=C.map((cc,i)=>{ const sq=S.sqft, P=sq*(S.type==="villa"?cc.vpsf:cc.psf); const mm=model({city:i,psf:S.type==="villa"?cc.vpsf:cc.psf,priceMode:"rate",growth:cc.gr+(S.type==="villa"?0.01:0),yield:Math.max(0.015,cc.yld-(S.type==="villa"?0.005:0)),deposit:cc.dep,maint:S.type==="villa"?cc.mnt*0.6:cc.mnt});
+    return {i,cc,f:fit(cc),P,adv:S.exit==="sell"?mm.advSell:mm.advPass}; }).sort((a,b)=>b.f-a.f);
+  $("league").innerHTML=`<tr><th>#</th><th>City</th><th class="num">Fit</th><th class="hide-sm"></th><th class="num">Air</th><th class="num hide-sm">Health</th><th class="num hide-sm">Similar home</th><th class="num">Buy vs rent, yr ${N}</th></tr>`+
+    rows.map((r,ix)=>`<tr class="click ${r.i===S.city?"sel":""}" data-city="${r.i}" tabindex="0"><td>${ix+1}</td><td><b>${r.cc.n}</b></td><td class="num">${r.f}</td><td class="hide-sm" style="min-width:70px"><div class="bar" style="width:${r.f}%"></div></td><td class="num">${r.cc.aqi}</td><td class="num hide-sm">${r.cc.h}/5</td><td class="num hide-sm">${money(r.P)}</td><td class="num" style="color:${r.adv>=0?"var(--neem)":"var(--rent)"}">${r.adv>=0?"Buy +":"Rent +"}${money(Math.abs(r.adv))}</td></tr>`).join("");
+  document.querySelectorAll("#league tr[data-city]").forEach(tr=>{ const go=()=>{ S.city=+tr.dataset.city; cityDefaults(true); update(); window.scrollTo({top:0,behavior:"smooth"}); }; tr.onclick=go; tr.onkeydown=e=>{ if(e.key==="Enter") go(); }; });
+
+  // recommendations
+  const rec=[]; const top3=rows.slice(0,3).map(r=>r.cc.n);
+  rec.push(`<strong>Money:</strong> over ${N} years, ${m.adv>=0?"buying":"renting and investing the difference"} comes out ahead by ${money(Math.abs(m.adv))} if you ${S.exit==="sell"?"sell at the end":"pass the home on"} (${m.advPass>=0?"buying":"renting"} ahead by ${money(Math.abs(m.advPass))} when passed on; ${m.advSell>=0?"buying":"renting"} ahead by ${money(Math.abs(m.advSell))} when sold).`);
+  const minus10=model({ltv:Math.max(0,S.ltv-0.1)}); const dLoan=minus10.adv-m.adv;
+  if(S.ltv>0) rec.push(`<strong>Loan:</strong> ${S.rate>S.inv?`your loan rate (${pct(S.rate,2)}) is above your investment return (${pct(S.inv,2)}), so borrowing less helps – each 10% less loan improves buying by about ${money(Math.abs(dLoan))}.`:`your investment return beats the loan rate, so a larger loan can make sense if you are comfortable with the EMI.`}`);
+  else rec.push(`<strong>Loan:</strong> you are paying in full. ${S.rate>S.inv?"That is the cheapest way to buy at these rates.":"With returns above the loan rate, a modest loan could leave more invested."}`);
+  const gNeed=[0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.10,0.11,0.12].find(v=>model({growth:v}).adv>=0);
+  rec.push(`<strong>Price growth:</strong> ${gNeed?`buying beats renting if prices grow about ${pct(gNeed,0)} a year or more (you assumed ${pct(S.growth,1)}).`:"even 12% yearly price growth would not make buying win at these settings."}`);
+  const other=model({type:S.type==="villa"?"apt":"villa",psf:S.type==="villa"?c.psf:c.vpsf,growth:c.gr+(S.type==="villa"?0:0.01),yield:Math.max(0.015,c.yld-(S.type==="villa"?0:0.005)),maint:S.type==="villa"?c.mnt:c.mnt*0.6});
+  rec.push(`<strong>Type:</strong> a ${S.type==="villa"?"similar-sized apartment":"villa of the same size"} here would cost ${money(other.P)} and ${other.adv-m.adv>=0?"improve":"worsen"} buying's result by ${money(Math.abs(other.adv-m.adv))}, assuming villas grow 1% a year faster but rent at lower yields.`);
+  if(S.seniors>0) rec.push(`<strong>Your parents:</strong> prioritise hospital distance and clean air. ${c.aqi>=100?`${c.n}'s winter air is poor – favour its greenest areas or consider `+top3.filter(x=>x!==c.n).slice(0,2).join(" or ")+".":`${c.n} does reasonably well on air.`} Choose step-free homes with lifts and backup power.`);
+  if(S.children>0) rec.push(`<strong>Children:</strong> ${c.s>=4?"strong school choice here":"school choice is limited here – check options early"}; budget ${money(S.fees*S.children)} a year for fees.`);
+  const stName={res:"resident Indian",nri:"NRI",oci:"OCI cardholder",foreign:"foreign citizen without OCI"}[S.residency];
+  if(S.residency==="res") rec.push(`<strong>Your status (${stName}):</strong> you get the standard resident loan rate. Home-loan deductions (interest up to ₹2 L and principal up to ₹1.5 L a year) apply only under the old tax regime${S.taxded?` – included above, saving about ${money(m.taxSaved/S.years)} a year on average.`:" – tick the box under Loan and returns to include them."} On a sale, gains are taxed at 12.5%, and Section 54 can exempt them if you reinvest in another home.`);
+  else if(S.residency==="foreign") rec.push(`<strong>Your status (${stName}):</strong> you can rent, and can inherit property, but generally can't buy a home in India. If you are of Indian origin, an OCI card would give you the same property rights as an NRI.`);
+  else rec.push(`<strong>Your status (${stName}):</strong> you can buy homes and commercial property, but not agricultural land, plantations or farmhouses – check that a villa's land is non-agricultural. ${S.residency==="oci"?"Keep your OCI card valid and linked to your current passport. ":""}Pay through NRE/NRO accounts; NRI home loans usually cost about 0.25% more (included in the default rate), and converting money from abroad costs about ${money(m.fxc)} here. When you sell, the buyer withholds tax on your gain, so apply for a lower-deduction certificate first. Sale proceeds of up to two homes bought with foreign funds can be sent back abroad. Once you move to India for good you become tax-resident – usually "resident but not ordinarily resident" for the first years.`);
+  rec.push(`<strong>Best-fitting cities for your family:</strong> ${top3.join(", ")}.${top3.includes(c.n)?"":` ${c.n} ranks lower for your mix – check the table above.`}`);
+  rec.push(`<strong>Plan:</strong> ${S.travel?"while you still work abroad, rent for 12–24 months in your preferred area to test hospitals, traffic and winter air. Then ":""}${m.adv>=0||S.exit==="pass"?"buy a ready home (no GST, no delivery risk) once you are sure, if you want a permanent family home to keep.":"keep renting unless a permanent family home matters more to you than the money."} ${S.status==="uc"?"Under-construction homes add 5% GST and can slip – check RERA progress reports.":""}`);
+  $("rec").innerHTML=rec.map(x=>`<li>${x}</li>`).join("");
+  drawCharts(m);
+  window.__m=m;
+}
+function update(){ syncControls(); render(); save(); }
+
+/* ---------------- OPTIONAL CAPABILITIES ---------------- */
+async function lightUp(){
+  if(!window.claude || typeof window.claude.use!=="function") return;
+  try{
+    const sample = await window.claude.use("sample");
+    if(sample){
+      $("aiBox").hidden=false;
+      let ctl=null;
+      $("aiBtn").onclick=async()=>{
+        if(ctl) ctl.abort(); ctl=new AbortController();
+        const m=window.__m, c=m.c; $("aiOut").textContent="Writing…"; $("aiBtn").disabled=true;
+        const brief={city:c.n,state:c.st,family:{adults:S.adults,children:S.children,seniors:S.seniors,travelsAbroad:S.travel,buyerStatus:S.residency},home:{type:S.type,status:S.status,sqft:Math.round(m.sqft),priceINR:Math.round(m.P)},
+          loanShare:S.ltv,loanRate:S.rate,investReturn:S.inv,priceGrowth:S.growth,rentalYield:S.yield,holdYears:S.years,exit:S.exit,
+          results:{upfrontINR:Math.round(m.upfront),emiINR:Math.round(m.emi),rentINR:Math.round(m.rent1),advantageOfBuyingINR:Math.round(m.adv),breakEvenYear:S.exit==="sell"?m.beSell:m.bePass},
+          areasConsidered:c.areas.map(a=>a[0]),projectsListed:c.proj.map(p=>p[0])};
+        const prompt=`You are advising an Indian-origin family planning to retire in India. Using the selections and model results below, write a practical briefing of about 250 words in plain English with these short sections: "Is ${c.n} right for this family?", "Where to look", "Buy or rent?", "Check before you commit". Be specific to the family make-up (seniors need hospitals and clean air; children need schools). Do not invent project prices or possession dates; if you mention a project, say its status must be checked on the state RERA website. Note that your knowledge may be out of date. Use rupees (lakh/crore). No markdown symbols.\n\n${JSON.stringify(brief)}`;
+        try{
+          const r=await sample(prompt,{signal:ctl.signal,onText:({text})=>{ $("aiOut").textContent=text; }});
+          $("aiOut").textContent=r.text;
+        }catch(e){
+          if(e&&e.code==="not_granted"){ $("aiBox").hidden=true; }
+          else $("aiOut").textContent = e&&e.code==="rate_limited"? "Too many requests right now. Try again in a minute." : "The briefing could not be written. Try again later.";
+        }finally{ $("aiBtn").disabled=false; }
+      };
+    }
+  }catch(e){}
+  try{
+    const dl = await window.claude.use("downloads");
+    if(dl){
+      $("csvBtn").hidden=false;
+      $("csvBtn").onclick=async()=>{
+        const m=window.__m; const r=v=>Math.round(v);
+        const head="Year,Buy EMIs (INR),Buy upkeep (INR),Buy total (INR),Rent total (INR),Renter investments (INR),Home value (INR),Loan balance (INR),Buyer wealth - sell (INR),Buyer wealth - pass on (INR),Renter wealth (INR)\n";
+        const body=m.Y.map(x=>[x.y,r(x.emiY),r(x.ownY),r(x.buyY),r(x.rentY),r(x.inv),r(x.V),r(x.bal),r(x.wSell),r(x.wPass),r(x.wRent)].join(",")).join("\n");
+        try{ await dl.save({filename:`buy-vs-rent-${m.c.n.split(" ")[0].toLowerCase()}.csv`,data:head+body}); }catch(e){ if(e&&(e.code==="unavailable"||e.code==="not_granted")) $("csvBtn").hidden=true; }
+      };
+    }
+  }catch(e){}
+}
+
+function openSheet(on){
+  $("sheet").classList.toggle("open",on); $("backdrop").classList.toggle("show",on);
+  document.body.classList.toggle("sheet-open",on); $("openSheet").setAttribute("aria-expanded",String(on));
+  if(on) $("closeSheet").focus();
+}
+$("openSheet").onclick=()=>openSheet(true);
+$("closeSheet").onclick=()=>openSheet(false);
+$("backdrop").onclick=()=>openSheet(false);
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") openSheet(false); });
+build(); update(); lightUp();
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{ charts={}; document.querySelectorAll("canvas").forEach(cv=>{ const ch=Chart.getChart(cv); if(ch) ch.destroy(); }); render(); });
+</script>
+</body>
+</html>
